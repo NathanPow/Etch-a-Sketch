@@ -9,8 +9,8 @@
  */
 
 
-const AMOUNTOFDIVS = 256; // 16 * 16 = 256
-const AMOUNTOFROWSANDCOLUMNS = 16; 
+let AMOUNTOFDIVS = 256; // 16 * 16 = 256
+let square = 0;
 let size = 0;
 
 
@@ -18,9 +18,19 @@ const div = document.querySelector("#container");
 const button = document.querySelector("#prompt");
 
 button.addEventListener("click", () => {
- size = prompt("Enter the size of the grid you would like : ", size);
+ size = parseInt(prompt("Enter the size of the grid you would like : " ));
  console.log(size);
+ console.log(typeof size);
+
+ 
+      if(size > 0 && size <=100){
+        square.style.width = `${size}px`
+        square.style.height = `${size}px`
+        AMOUNTOFDIVS = 512 / size;
+    };
+
 });
+
 
 function resetGrid() {
     square.style.width = "0px";
@@ -28,16 +38,12 @@ function resetGrid() {
 
 };
     
-function generateGrid() {
-    
-      if(size > 0){
-        square.style.width = `${size}px`
-        square.style.height = `${size}px`
-    };
+function generateGrid(size) {
+
 
 
     for(let i = 1; i <= AMOUNTOFDIVS;i++){   
-    const square = document.createElement("div");
+    square = document.createElement("div");
     square.style.width = "32px";
     square.style.height = "32px";
     square.classList.add('square');
@@ -60,6 +66,7 @@ function generateGrid() {
 
 
 generateGrid();
+console.log(size);
 
 
 
