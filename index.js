@@ -21,16 +21,42 @@ const div = document.querySelector('#container');
 const btn1 = document.querySelector('#btn1');
 
 let divCount = 16;
-let width = 560 / divCount;
-let height = 560 / divCount;
+const container = 660;
+let width = container / divCount;
+let height = container / divCount;
 let square;
 let AMOUNTOFDIVS = divCount ** 2 ;
 let userDivCount = 0;
+const colourArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+const INITIAL_OPACITY = 0.1;
+
 
 
 function resetGrid(){
     div.textContent = ''
 };
+
+
+
+function getRandomNumber(){
+ let randomNumber = Math.floor(Math.random() * colourArr.length);
+ return randomNumber;
+}
+
+
+
+function randomizeColour (){
+ let colourStr = '';
+
+   for(let j = 1;j <= 6; j++){
+    colourStr += colourArr[getRandomNumber()];
+   }
+   // console.log(colourStr)
+   return colourStr;
+};
+
+
+
 
  btn1.addEventListener('click', () =>{
  userDivCount = parseInt(window.prompt("Enter a number between 1 - 100 to change the grid size.", ));
@@ -42,8 +68,8 @@ function resetGrid(){
     else if(userDivCount > 0 && userDivCount <= 100){
     resetGrid();
     divCount = userDivCount;
-    width = 560 / divCount;
-    height = 560 / divCount;
+    width = container / divCount;
+    height = container / divCount;
     AMOUNTOFDIVS = divCount ** 2 ;
     generateGrids();
 
@@ -60,9 +86,11 @@ function resetGrid(){
 });
 
 
+
+
+
 function generateGrids (){
 
-   
 
  for(let i = 1;i <= AMOUNTOFDIVS;i++){
     square = document.createElement("div");
@@ -73,107 +101,49 @@ function generateGrids (){
         square.addEventListener('mouseover', (event) =>{
             //Used event.target to directly target square rather that CSS 
 
-        event.target.style.backgroundColor = 'red';
+        event.target.style.backgroundColor = `#${randomizeColour()}`;
             //square.style.backgroundColor = 'red';
     });
 
-      square.addEventListener('mouseout', (event) =>{
-        event.target.style.backgroundColor = 'rgb(6, 132, 174)';
-        //square.style.backgroundColor = 'rgb(6, 132, 174)';
+    square.addEventListener('mouseout', (event) => {
+    // Get current color from data attribute or use the current background color
+    let currentColor = event.target.dataset.currentColor || event.target.style.backgroundColor;
+    
+    // If no color is set yet, use the current blue as starting point
+    if (!currentColor || currentColor === 'black') {
+        currentColor = 'rgb(6, 132, 174)';
+    }
+    
+    // Parse RGB values
+    const rgb = currentColor.match(/\d+/g).map(Number);
+    
+    // Reduce each RGB value by 10% (darken by 10%)
+    const darkenedRGB = rgb.map(value => {
+        const newValue = Math.max(0, Math.floor(value * 0.9)); // 10% darker
+        return newValue;
     });
-   
+    
+    // Create new color
+    const newColor = `rgb(${darkenedRGB[0]}, ${darkenedRGB[1]}, ${darkenedRGB[2]})`;
+    
+    // Apply the darkened color
+    event.target.style.backgroundColor = newColor;
+    event.target.dataset.currentColor = newColor;
+    
+    // Remove opacity since we're using actual RGB darkening
+    event.target.style.opacity = '1';
+});
+  
+
 
      div.appendChild(square);
-    console.log("square created");
-    
+    console.log("squares created");  
  }
-
- 
-  
 };
+
 
 
 generateGrids();
-
-
-
-
-/**Initial Attempt 
-let AMOUNTOFDIVS = 256; // 16 * 16 = 256
-let square = 0;
-let size = 0;
-
-
-const div = document.querySelector("#container");
-const button = document.querySelector("#prompt");
-
-button.addEventListener("click", () => {
- size = parseInt(prompt("Enter the size of the grid you would like : " ));
- console.log(size);
- console.log(typeof size);
-
- 
-      if(size > 0 && size <=100){
-        square.style.width = `${size}px`
-        square.style.height = `${size}px`
-        AMOUNTOFDIVS = 512 / size;
-    };
-
-});
-
-
-function resetGrid() {
-    square.style.width = "0px";
-    square.style.height = "0px";
-
-};
-    
-function generateGrid(size) {
-
-
-
-    for(let i = 1; i <= AMOUNTOFDIVS;i++){   
-    square = document.createElement("div");
-    square.style.width = "32px";
-    square.style.height = "32px";
-    square.classList.add('square');
-
-       square.addEventListener('mouseover', () => {
-            square.style.backgroundColor = "blue";
-        }); 
-         square.addEventListener('mouseout', () => {
-            square.style.backgroundColor = "lightblue";
-        });
-    div.appendChild(square); 
-    console.log("square created"); 
-
-
-  
-    }
-
-};
-
-
-
-generateGrid();
-console.log(size);
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -190,4 +160,33 @@ console.log(size);
             square.style.backgroundColor = "lightblue";
         });
     });
+
+
+
+
+
+
+
+
+      square.addEventListener('mouseout', (event) => {
+    // Get current opacity from data attribute or default to 0
+    let currentOpacity = parseFloat(event.target.dataset.opacity) || 0;
+    
+    // Increment opacity by 0.1 (10 steps to reach 1.0)
+    if (currentOpacity < 1.0) {
+        currentOpacity += 0.1;
+        currentOpacity = Math.min(currentOpacity, 1.0);
+    }
+    
+    // Update opacity
+    event.target.style.opacity = currentOpacity;
+    event.target.dataset.opacity = currentOpacity;
+    
+    // Set background color to progressively darker
+    // As opacity increases, the black background becomes more visible
+    event.target.style.backgroundColor = 'black';
+    
+    // Optional: Keep some blue tint by mixing colors
+    // event.target.style.backgroundColor = `rgba(6, 132, 174, ${1 - currentOpacity})`;
+});
  */

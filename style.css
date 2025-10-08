@@ -13,9 +13,10 @@ body{
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width:  560px; /*16 * 30*/
-    height: 560px;/*16 * 30*/
+    width:  660px; /*16 * 30*/
+    height: 660px;/*16 * 30*/
     margin-top: 25px;
+    
     
 }
 
@@ -25,7 +26,7 @@ box-sizing: border-box;
 background-color: rgb(6, 132, 174);
 margin: 0px;
 border: 1px solid #000;
-transition: background-color linear 0.1s;
+/*transition: background-color linear 0.3s;*/
 }
 
 
